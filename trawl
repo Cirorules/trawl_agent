@@ -1,0 +1,87 @@
+#!/usr/bin/python
+
+import argparse
+import sys
+
+import os
+
+from trawl_agent.common import daemon
+from trawl_agent.common import register
+
+URL='http://<<url>>/in/register'
+
+parser = argparse.ArgumentParser()
+parser.add_argument("--host", action='store_true', help="Register this host with Trawl", required=False)
+parser.add_argument("--key", help="API Key", required=False)
+parser.add_argument("--log", help="Log type. Example: nginx, apache, custom", required=False)
+parser.add_argument("--path", help="Full path to the log you are registering", required=False)
+parser.add_argument("--init", help="Start the trawler daemon", required=False)
+
+args = parser.parse_args()
+r = register.Register()
+
+if args.host == False and args.log is None and args.init is None:
+    print("""\nRegister a host or logs to push to trawl.
+    Press <ctrl> c to quit or continue interactively\n""")
+
+    reg_host = raw_input("Register this host with trawl (y/n)?")
+
+    if reg_host.lower() == 'y':
+        api_key = raw_input("Please enter your API key: ")
+        try:
+            r.register_host(api_key)
+        except:
+            raise
+    else:
+        sys.exit()
+
+    logs = r.find_logs()
+    print(logs)
+    add_log = raw_input("Would you like to register the above logs (y/n)?")
+    if add_log.lower() == 'y':
+        for log in logs:
+            try:
+                u = r.register_logs(log[0],log[1])
+                print(u.text) # Change to print readable error
+            except:
+                raise
+    else:
+        print("Please register logs manually")
+        print("Example: trawl --key APIKEY --log httpd --path /var/log/httpd/access_log")
+        exit()
+
+if args.host:
+    if args.key:
+        r = register.Register()
+        print r.register_host(args.key)
+    else:
+        print("\nPlease provide your API key\n")
+
+if args.log:
+    if args.path:
+        if os.path.exists(args.path):
+            r = register.Register()
+            u = r.register_logs(args.log, args.path)
+            print u.text
+        else:
+            print("File not found")
+    else:
+        print("\nPlease provide full path to log\n")
+
+if args.init:
+    d = daemon.Daemon()
+    if 'start' == args.init:
+        d.start()
+    elif 'stop' == args.init:
+        d.stop()
+    elif 'restart' == args.init:
+        d.restart()
+    elif 'status' == args.init:
+        d.status()
+    else:
+        print "Unknown command"
+        sys.exit(2)
+    sys.exit(0)
+
+
+

@@ -1,0 +1,9 @@
+instances:
+  nginx_status_url: http://<< host >>/nginx_status
+  #nginx_user:
+  #nginx_password:
+
+  nginx_logs:
+    log_directory: /var/log/nginx
+    logs:
+      - access_log

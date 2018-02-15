@@ -1,0 +1,10 @@
+instances:
+  apache_status_url: http://<< host >>/server-status?auto
+  #apache_user:
+  #apache_password:
+
+  apache_logs:
+    log_directory: /var/log/httpd
+    logs:
+      - access_log
+      - error_log

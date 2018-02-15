@@ -1,0 +1,4 @@
+include ../trawl
+include ../trawl.service
+include 22-trawl.conf
+recursive-include conf *.yaml

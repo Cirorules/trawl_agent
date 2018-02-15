@@ -1,0 +1,11 @@
+[Unit]
+Description=Start Trawl Collection
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/trawl --init start
+ExecStop=/usr/bin/trawl --init stop
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target

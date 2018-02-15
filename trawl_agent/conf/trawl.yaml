@@ -1,0 +1,9 @@
+global_config:
+  host_name:
+  api_key:
+  check_interval: 1 # in minutes
+  trawl_url: http://<< host >>
+  web_logs:
+    number_of_threads: 5
+  stats:
+    number_of_threads: 5
